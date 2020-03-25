@@ -209,12 +209,14 @@ public class Path {
      * Compute the length of this path (in meters).
      * 
      * @return Total length of the path (in meters).
-     * 
-     * @deprecated Need to be implemented.
      */
     public float getLength() {
         // TODO:
-        return 0;
+    	float length = 0;
+    	for (int i = 0; i < arcs.size(); i++) {
+    		length += arcs.get(i).getLength();
+    	}
+        return length;
     }
 
     /**
@@ -229,6 +231,10 @@ public class Path {
      */
     public double getTravelTime(double speed) {
         // TODO:
+    	double time = 0;
+    	for (int i = 0; i < arcs.size(); i++) {
+    		time += arcs.get(i).getTravelTime();
+    	}
         return 0;
     }
 
