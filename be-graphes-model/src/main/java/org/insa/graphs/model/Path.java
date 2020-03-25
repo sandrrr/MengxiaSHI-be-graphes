@@ -29,13 +29,29 @@ public class Path {
      * 
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
-     * 
-     * @deprecated Need to be implemented.
      */
     public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
         // TODO:
+        if (nodes.size() == 0) {return new Path(graph);}
+        if (nodes.size() == 1) {return new Path(graph, nodes.get(0));}
+        for (int i = 0; i < nodes.size() - 1; i++) {
+        	Arc arc_fastest = null;
+        	List<Arc> successors = nodes.get(i).getSuccessors();
+        	for (int j = 0; j < successors.size(); j++) {
+        		if (successors.get(j).getDestination().getId() == nodes.get(i+1).getId()) {
+        			if (arc_fastest == null || arc_fastest.getMinimumTravelTime() > successors.get(j).getMinimumTravelTime()) {
+        				arc_fastest = successors.get(j);
+        			}
+        		}
+        	}
+        	if (arc_fastest == null) {
+        		throw new IllegalArgumentException();
+        	} else {
+        		arcs.add(arc_fastest);
+        	}
+        }
         return new Path(graph, arcs);
     }
 
@@ -50,13 +66,29 @@ public class Path {
      * 
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
-     * 
-     * @deprecated Need to be implemented.
      */
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
         // TODO:
+        if (nodes.size() == 0) {return new Path(graph);}
+        if (nodes.size() == 1) {return new Path(graph, nodes.get(0));}
+        for (int i = 0; i < nodes.size() - 1; i++) {
+        	Arc arc_shortest = null;
+        	List<Arc> successors = nodes.get(i).getSuccessors();
+        	for (int j = 0; j < successors.size();j++) {
+        		if (successors.get(j).getDestination().getId() == nodes.get(i+1).getId()) {
+        			if (arc_shortest == null || arc_shortest.getLength() > successors.get(j).getLength()) {
+        				arc_shortest = successors.get(j);
+        			}
+        		}
+        	}
+        	if (arc_shortest == null) {
+        		throw new IllegalArgumentException();
+        	} else {
+        		arcs.add(arc_shortest);
+        	}
+        }
         return new Path(graph, arcs);
     }
 
@@ -197,12 +229,24 @@ public class Path {
      * </ul>
      * 
      * @return true if the path is valid, false otherwise.
-     * 
-     * @deprecated Need to be implemented.
      */
     public boolean isValid() {
         // TODO:
-        return false;
+    	if (isEmpty()|| arcs.size() == 0) {
+    		return true;
+    	} else {
+    		if (arcs.get(0).getOrigin() != origin) {
+    			return false;
+    		} else {
+    			for (int i = 0; i < arcs.size() - 1; i++) {
+    				if (arcs.get(i).getDestination() != arcs.get(i+1).getOrigin()) {
+    					return false;
+    				}
+    			}
+    			return true;
+    		}
+    	}
+    	
     }
 
     /**
@@ -226,16 +270,14 @@ public class Path {
      * 
      * @return Time (in seconds) required to travel this path at the given speed (in
      *         kilometers-per-hour).
-     * 
-     * @deprecated Need to be implemented.
      */
     public double getTravelTime(double speed) {
         // TODO:
     	double time = 0;
     	for (int i = 0; i < arcs.size(); i++) {
-    		time += arcs.get(i).getTravelTime();
+    		time += arcs.get(i).getTravelTime(speed);
     	}
-        return 0;
+        return time;
     }
 
     /**
@@ -243,12 +285,14 @@ public class Path {
      * on every arc.
      * 
      * @return Minimum travel time to travel this path (in seconds).
-     * 
-     * @deprecated Need to be implemented.
      */
     public double getMinimumTravelTime() {
         // TODO:
-        return 0;
+    	double timeMin = 0;
+    	for (int i = 0; i < arcs.size(); i++) {
+    		timeMin += arcs.get(i).getMinimumTravelTime();
+    	}
+        return timeMin;
     }
 
 }
