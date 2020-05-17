@@ -7,7 +7,7 @@ public class Label implements Comparable<Label> {
 	
 	private Node sommet;
 	private boolean marque;
-	private double cout;
+	protected double cout;
 	private Arc predecesseur;
 	
 	public Label(Node sommet) {
