@@ -13,13 +13,17 @@ public class LabelStar extends Label {
 		if (data.getMode() == AbstractInputData.Mode.LENGTH) {
 			this.coutStar = Point.distance(sommet.getPoint(), data.getDestination().getPoint());
 		} else {
-			int vitesse = data.getMaximumSpeed();
+			int vitesse = Math.max(data.getGraph().getGraphInformation().getMaximumSpeed(), data.getMaximumSpeed());
 			this.coutStar = Point.distance(sommet.getPoint(), data.getDestination().getPoint()) / vitesse * 3.6;
 		}
 	}
 	
 	public double getTotalCost() {
 		return this.coutStar + this.cout;
+	}
+	
+	public double getCostStar() {
+		return this.coutStar;
 	}
 
 	@Override
@@ -30,7 +34,13 @@ public class LabelStar extends Label {
 		} else if (this.getTotalCost() > autreStar.getTotalCost()) {
 			return 1;
 		} else {
-			return 0;
+			if (this.getCostStar() < autreStar.getCostStar()) {
+				return -1;
+			} else if (this.getCostStar() > autreStar.getCostStar()) {
+				return 1;
+			} else {
+				return 0;
+			}
 		}
 	}
 }
