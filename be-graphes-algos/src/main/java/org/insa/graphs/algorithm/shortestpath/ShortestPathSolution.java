@@ -9,7 +9,7 @@ public class ShortestPathSolution extends AbstractSolution {
 
     // Optimal solution.
     private final Path path;
-
+    private int nbArcs, nbExplores, nbMarques, maxTas;
     /**
      * Create a new infeasible shortest-path solution for the given input and
      * status.
@@ -33,6 +33,15 @@ public class ShortestPathSolution extends AbstractSolution {
         super(data, status);
         this.path = path;
     }
+    
+    public ShortestPathSolution(ShortestPathData data, Status status, Path path, int nbArcs, int nbExplores, int nbMarques, int maxTas) {
+        super(data, status);
+        this.path = path;
+        this.nbArcs = nbArcs;
+        this.nbExplores = nbExplores;
+        this.nbMarques = nbMarques;
+        this.maxTas = maxTas;
+    }
 
     @Override
     public ShortestPathData getInputData() {
@@ -44,6 +53,22 @@ public class ShortestPathSolution extends AbstractSolution {
      */
     public Path getPath() {
         return path;
+    }
+    
+    public int getNbArcs() {
+        return nbArcs;
+    }
+    
+    public int getNbExplores() {
+        return nbExplores;
+    }
+    
+    public int getNbMarques() {
+        return nbMarques;
+    }
+    
+    public int getMaxTas() {
+        return maxTas;
     }
 
     @Override

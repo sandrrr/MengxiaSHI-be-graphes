@@ -39,10 +39,14 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         x.setCost(0);
         heap.insert(x);
         boolean findDestination = false;
-      //iteration
+        //statistics
+        int nbExplores=0, nbMarques=0, maxTas=0;
+        //iteration
         while(!findDestination && heap.size() > 0) {
         	x = heap.deleteMin();
         	x.setMark(true);
+        	nbMarques++;
+			notifyNodeMarked(x.getSommet());
         	for(Arc arc : x.getSommet().getSuccessors()) {
         		if (data.isAllowed(arc)) {
         			Label y = map.get(arc.getDestination());
@@ -53,11 +57,13 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             				y.setFather(arc);
             				int index = heap.indexOf(y);
             				if (index < 0) {
+            					nbExplores++;
                 				notifyNodeReached(y.getSommet());
             					if (y.getSommet() == data.getDestination()) {
             						findDestination = true;
             					}
             					heap.insert(y);
+            					if (heap.size() > maxTas) maxTas = heap.size();
             				} else {
             					heap.update(index);
             				}
@@ -90,12 +96,12 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
             Collections.reverse(arcs);
             // Create the final solution.
             Path path = new Path(graph, arcs);
-            solution = new ShortestPathSolution(data, Status.OPTIMAL, path);
+            solution = new ShortestPathSolution(data, Status.OPTIMAL, path, path.getArcs().size(), nbExplores, nbMarques, maxTas);
             // Verification final solution
             if (debug) {
-                System.out.println(path.isValid());
-                System.out.println(path.getLength());
-                System.out.println(map.get(data.getDestination()).getCost());
+                System.out.println("le chemin est valide : " + path.isValid());
+                System.out.println("nombre d'arcs : " + path.getArcs().size());
+                System.out.println("coût de la solution : " + map.get(data.getDestination()).getCost());
             }
         }
         return solution;
